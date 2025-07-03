@@ -1,5 +1,36 @@
-const result = await fetch("/api/ask", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ prompt })
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Unknown AI</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+    textarea { width: 100%; height: 120px; }
+    button { padding: 10px 20px; margin-top: 10px; }
+    pre { white-space: pre-wrap; background: #eee; padding: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Unknown AI</h1>
+  <textarea id="prompt" placeholder="Ask me anything..."></textarea><br />
+  <button onclick="ask()">Send</button>
+  <pre id="response">...</pre>
+
+  <script>
+    async function ask() {
+      const prompt = document.getElementById('prompt').value;
+      document.getElementById('response').textContent = 'Thinking...';
+
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await res.json();
+      const content = data?.choices?.[0]?.message?.content || 'No response';
+      document.getElementById('response').textContent = content;
+    }
+  </script>
+</body>
+</html>
